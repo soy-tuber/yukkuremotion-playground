@@ -26,24 +26,32 @@ export async function generateFromFramesMap(videoConfig: VideoConfig) {
       section.totalFrames += section.beforeMovieFrames;
     }
 
-    for (let i = 1; i < section.talks.length; i++) {
-      // ここでは今の Talk 以前の音声ファイルの秒数を取得するため index - 1 を参照している
-      const previousTalk = talks[i - 1];
-      if (previousTalk.id || previousTalk.ids) {
-        const id = previousTalk.ids ? previousTalk.ids[0] : previousTalk.id;
-        const durationSec = await getAudioDurationInSeconds(
-          `./public/audio/yukkuri/${id}.wav`
-        );
+    section.totalFrames = cumulate;
 
-        const audioDurationframes = Math.floor((durationSec || 1) * FPS);
-        const totalFrames =
-          previousTalk.customDuration || audioDurationframes + TALK_GAP_FRAMES;
-        cumulate += totalFrames;
-        section.fromFramesMap[i] = cumulate;
-        section.totalFrames = cumulate;
+    for (let i = 0; i < section.talks.length; i++) {
+      // Logic for separating talks (adding duration of previous talk to cumulate)
+      if (i > 0) {
+        const previousTalk = talks[i - 1];
+        if (previousTalk.id || previousTalk.ids) {
+          const id = previousTalk.ids ? previousTalk.ids[0] : previousTalk.id;
+          const durationSec = await getAudioDurationInSeconds(
+            `./public/audio/yukkuri/${id}.wav`
+          );
 
-        if (i === section.talks.length - 1) {
-          const currentTalk = talks[i];
+          const audioDurationframes = Math.floor((durationSec || 1) * FPS);
+          const totalFrames =
+            previousTalk.customDuration ||
+            audioDurationframes + TALK_GAP_FRAMES;
+          cumulate += totalFrames;
+          section.fromFramesMap[i] = cumulate;
+          section.totalFrames = cumulate;
+        }
+      }
+
+      // Logic for adding duration of the LAST talk to totalFrames
+      if (i === section.talks.length - 1) {
+        const currentTalk = talks[i];
+        if (currentTalk.id || currentTalk.ids) {
           const id = currentTalk.ids ? currentTalk.ids[0] : currentTalk.id;
           const lastAudioDurationSec = await getAudioDurationInSeconds(
             `./public/audio/yukkuri/${id}.wav`

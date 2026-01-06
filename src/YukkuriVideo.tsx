@@ -13,6 +13,17 @@ export const YukkuriVideo: React.FC<{
 }> = ({videoConfig}) => {
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <Img
+        src={staticFile('background.jpg')}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      />
       {videoConfig.sections.map((section, index) => {
         const cumulateFrames = getTotalFramesBeforeSection(videoConfig, index);
 
@@ -64,7 +75,7 @@ export const YukkuriVideo: React.FC<{
               totalFrames={cumulateFrames + section.totalFrames}
             />
 
-            <YukkuriSequence {...section} fromFramesMap={fromFrameMap} />
+            {/* <YukkuriSequence {...section} fromFramesMap={fromFrameMap} /> */}
 
             {section.beforeMovie && (
               <Sequence

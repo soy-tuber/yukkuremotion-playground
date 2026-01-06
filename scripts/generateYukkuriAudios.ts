@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import {v4 as uuidv4} from 'uuid';
 
 import {
@@ -10,16 +11,45 @@ import AquesTalk10, {gVoice_F1} from 'node-aquestalk10';
 import AqKanji2Koe from 'node-aqkanji2koe';
 import {AqKanji2KoeSetDevKey, Aquestalk10DevKey} from './aquest-keys';
 
-const aquestalk = new AquesTalk10(
-  './vendor/AquesTalk.framework/Versions/A/AquesTalk'
-);
-aquestalk.AquesTalkSetDevKey(Aquestalk10DevKey);
+const isLinux = process.platform === 'linux';
+
+const resolvePath = (p: string) => path.resolve(process.cwd(), p);
+
+const aquestalkPath = isLinux
+  ? resolvePath('vendor/aqtk10_lnx/lib64/libAquesTalk10.so.1.1')
+  : resolvePath('vendor/AquesTalk.framework/Versions/A/AquesTalk');
+
+const aquestalk = new AquesTalk10(aquestalkPath);
+// キーがある場合のみセットする（評価版はセット不要な場合があるため）
+if (Aquestalk10DevKey) {
+  aquestalk.AquesTalkSetDevKey(Aquestalk10DevKey);
+}
+
+const aqKanji2KoePath = isLinux
+  ? resolvePath('vendor/aqk2k_lnx/lib/libAqKanji2Koe.so.4.1')
+  : resolvePath('vendor/AqKanji2Koe.framework/Versions/A/AqKanji2Koe');
+const aqUsrDicPath = isLinux
+  ? resolvePath('vendor/aqk2k_lnx/lib/libAqUsrDic.so.4.1')
+  : resolvePath('vendor/AqUsrDic.framework/Versions/A/AqUsrDic');
+const aqDicPath = isLinux
+  ? resolvePath('vendor/aqk2k_lnx/aq_dic')
+  : resolvePath('vendor/aq_dic_large');
+
+console.log('--- Debug Info ---');
+console.log('CWD:', process.cwd());
+console.log('AqKanji2Koe Path:', aqKanji2KoePath, 'Exists:', fs.existsSync(aqKanji2KoePath));
+console.log('AqUsrDic Path:', aqUsrDicPath, 'Exists:', fs.existsSync(aqUsrDicPath));
+console.log('AqDic Path:', aqDicPath, 'Exists:', fs.existsSync(aqDicPath));
+console.log('------------------');
+
 const aqkanji2koe = new AqKanji2Koe(
-  './vendor/AqKanji2Koe.framework/Versions/A/AqKanji2Koe',
-  './vendor/AqUsrDic.framework/Versions/A/AqUsrDic',
-  './vendor/aq_dic_large'
+  aqKanji2KoePath,
+  aqUsrDicPath,
+  aqDicPath
 );
-aqkanji2koe.AqKanji2KoeSetDevKey(AqKanji2KoeSetDevKey);
+if (AqKanji2KoeSetDevKey) {
+  aqkanji2koe.AqKanji2KoeSetDevKey(AqKanji2KoeSetDevKey);
+}
 
 const SPEED = 115;
 

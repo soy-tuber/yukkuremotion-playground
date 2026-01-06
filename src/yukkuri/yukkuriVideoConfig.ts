@@ -50,6 +50,10 @@ export type VoiceConfig = {
 	customDuration?: number;
 	// 特に動画自体には影響のない、動画制作者のためのメモ
 	memoForEditor?: string;
+  // 追加: 画面表示用
+  type?: string;
+  title?: string;
+  content?: string;
 };
 
 export type kuchipakuMap = {frames: number[]; amplitude: number[]};

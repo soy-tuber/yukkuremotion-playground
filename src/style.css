@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Custom Utilities if needed */
+.glass-panel {
+  @apply bg-white/95 backdrop-blur-md border border-white/20 shadow-2xl;
+}
+
+.mac-window {
+  @apply rounded-xl overflow-hidden shadow-2xl border border-gray-700 bg-[#1E1E1E];
+}
