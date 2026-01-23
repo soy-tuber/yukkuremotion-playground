@@ -1,5 +1,5 @@
-import {loadFont as loadNotoSansJP} from '@remotion/google-fonts/NotoSansJP';
+// import {loadFont as loadNotoSansJP} from '@remotion/google-fonts/NotoSansJP';
 
 export function loadFont() {
-	loadNotoSansJP();
+	// loadNotoSansJP();
 }
