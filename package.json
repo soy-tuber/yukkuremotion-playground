@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "remotion preview",
 		"build": "remotion render FirstVideo out/video.mp4",
-		"build:vtuber": "remotion render VtuberVideo out/vtuber-video.mp4",
+		"build:vtuber": "remotion render VtuberVideo out/vtuber-video.mp4 --concurrency=2 --codec=h264",
 		"buildForTestEncoding": "remotion render TestEncoding out/testEncoding.mp4",
 		"buildTransitionSpace": "remotion render TransitionSpace public/video/transition-space-yukkuri.mp4",
 		"upgrade": "remotion upgrade",

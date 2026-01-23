@@ -27,7 +27,6 @@ out/
 
 # 音声ファイル（生成物）
 /public/audio/yukkuri/
-/public/audio/voicevox/
 /vendor/
 
 # OS / エディタ
